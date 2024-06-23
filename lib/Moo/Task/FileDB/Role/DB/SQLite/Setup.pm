@@ -1,8 +1,8 @@
 
 # ABSTRACT : Methods for setting up $the_db in SQLite
 package Moo::Task::FileDB::Role::DB::SQLite::Setup;
-our $VERSION = 'v0.0.10';
-##~ DIGEST : efb493d1da48c907318edd2f92e85eaa
+our $VERSION = 'v0.0.11';
+##~ DIGEST : f5b97a39ea36abd69f00a3602013e196
 use Moo::Role;
 
 #because I use confess everywhere
@@ -14,6 +14,7 @@ sub init_db_schema {
 	my $sql = <<'SQL';
 
 	CREATE TABLE file_types (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		suffix TEXT NOT NULL UNIQUE,
 		mime_type TEXT NOT NULL
 	);
@@ -21,6 +22,7 @@ sub init_db_schema {
 	CREATE INDEX file_types_mime_type ON file_types(mime_type);
 
 	CREATE TABLE dirs (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		name TEXT NOT NULL,
 		host TEXT
 	);
@@ -29,6 +31,7 @@ sub init_db_schema {
 
 
 	CREATE TABLE hashes (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		file_id INTEGER,
 		hashed BOOLEAN CHECK (hashed IN (0, 1)),
 		md5_string TEXT,
@@ -39,6 +42,7 @@ sub init_db_schema {
 	CREATE INDEX hashes_sha1_string ON hashes(sha1_string);
 
 	CREATE TABLE files (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		name TEXT NOT NULL,
 		dir_id INTEGER,
 		file_type_id INTEGER,
