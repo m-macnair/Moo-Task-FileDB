@@ -1,8 +1,8 @@
 
 # ABSTRACT : Do DB Things using SQLite + SQL Abstract
 package Moo::Task::FileDB::Role::DB::AbstractSQLite;
-our $VERSION = 'v0.0.12';
-##~ DIGEST : 081a699df3e0b198755d1292e2f1d7d2
+our $VERSION = 'v0.0.13';
+##~ DIGEST : f9e2c73c17af1dcc2cb88416f3d2ccdc
 use Moo::Role;
 
 #because I use confess everywhere
