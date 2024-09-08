@@ -27,22 +27,17 @@ CREATE TABLE file_type (
 /* dir */
 CREATE TABLE dir (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	name TEXT NOT NULL,
+	name TEXT NOT NULL
 );
 CREATE INDEX dir_name ON dir(name);
-CREATE INDEX dir_host ON dir(host);
 
 /* hash */ 
-CREATE TABLE hash (
+CREATE TABLE hash_string (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	file_id INTEGER,
-	/* this may be overkill */
-	hashed BOOLEAN CHECK (hashed IN (0, 1)),
 	md5_string TEXT,
 	sha1_string TEXT
 );
-CREATE INDEX hash_file_id ON hash(file_id);
-CREATE INDEX hash_md5_string ON hash(md5_string);
-CREATE INDEX hash_sha1_string ON hash(sha1_string);
+CREATE INDEX hash_string_md5_string ON hash_string(md5_string);
+CREATE INDEX hash_string_sha1_string ON hash_string(sha1_string);
 
 /* /FileDB */
