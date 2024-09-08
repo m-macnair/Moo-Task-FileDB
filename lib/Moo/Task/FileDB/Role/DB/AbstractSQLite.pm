@@ -1,5 +1,4 @@
-
-# ABSTRACT : Do DB Things using SQLite + SQL Abstract
+# ABSTRACT : Do DB Things using SQLite + SQL Abstract - this is the *only* sqlite module in MTFDB atm, but it relies on Moo/GenericRole/DB/SQLite.pm which is not included here for reasons
 package Moo::Task::FileDB::Role::DB::AbstractSQLite;
 our $VERSION = 'v0.0.13';
 ##~ DIGEST : f9e2c73c17af1dcc2cb88416f3d2ccdc
