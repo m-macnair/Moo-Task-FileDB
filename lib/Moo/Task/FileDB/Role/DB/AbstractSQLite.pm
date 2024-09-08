@@ -1,18 +1,15 @@
 # ABSTRACT : Do DB Things using SQLite + SQL Abstract - this is the *only* sqlite module in MTFDB atm, but it relies on Moo/GenericRole/DB/SQLite.pm which is not included here for reasons
 package Moo::Task::FileDB::Role::DB::AbstractSQLite;
-our $VERSION = 'v0.0.13';
-##~ DIGEST : f9e2c73c17af1dcc2cb88416f3d2ccdc
+our $VERSION = 'v0.0.14';
+##~ DIGEST : a38c301ef54bd00c762aa25fd23dcee8
 use Moo::Role;
 
 #because I use confess everywhere
 use Carp qw(cluck confess);
 
 sub get_dir_id {
-	my ( $self, $string, $host ) = @_;
-	my $p = {name => $string};
-	if ( $host ) {
-		$p->{host} = $host;
-	}
+	my ( $self, $string ) = @_;
+	my $p   = {name => $string};
 	my $row = $self->select_insert_href( 'dir', $p, [qw/* /] );
 	return $row->{id};
 }
@@ -46,4 +43,26 @@ sub get_file_path {
 	return $path;
 
 }
+
+sub get_host_id {
+	my ( $self, $string ) = @_;
+	my $p   = {name => $string};
+	my $row = $self->select_insert_href( 'host', $p, [qw/*/] );
+	return $row->{id};
+}
+
+sub get_host_file_id {
+	my ( $self, $file, $host ) = @_;
+	my $p = {
+		file_id => $self->get_file_id( $file ),
+		host_id => $self->get_host_id( $host ),
+	};
+	my $row = $self->select_insert_href( 'host_file', $p, [qw/* /] );
+	if ( wantarray() ) {
+		return ( $row->{id}, $p );
+	} else {
+		return $row->{id};
+	}
+}
+
 1;
