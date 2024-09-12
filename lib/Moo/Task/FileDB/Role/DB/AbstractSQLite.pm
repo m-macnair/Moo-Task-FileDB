@@ -1,7 +1,7 @@
 # ABSTRACT : Do DB Things using SQLite + SQL Abstract - this is the *only* sqlite module in MTFDB atm, but it relies on Moo/GenericRole/DB/SQLite.pm which is not included here for reasons
 package Moo::Task::FileDB::Role::DB::AbstractSQLite;
-our $VERSION = 'v0.0.18';
-##~ DIGEST : a5ec7e444ff1b21d66f0d174e784f2dc
+our $VERSION = 'v0.0.19';
+##~ DIGEST : 61a4836d4f5f998486becf8aea20c6e0
 use Moo::Role;
 
 #because I use confess everywhere
@@ -22,7 +22,10 @@ sub get_file_id {
 	my ( $file, $dir ) = $self->file_path_parts( $string );
 	my ( undef, undef, $suffix ) = $self->file_parse( $string );
 
-	#TODO: actual validation of the file type
+	#TODO: actual validation of the file type ?
+	unless ( $suffix ) {
+		warn "WARNING: file [$string] has no suffix$/";
+	}
 	my $file_type_id = $self->get_file_type_id( lc( $suffix ) );
 	my $dir_id       = $self->get_dir_id( $dir );
 
@@ -71,7 +74,7 @@ sub get_hash_id_for_file_string {
 
 sub get_file_type_id {
 	my ( $self, $string ) = @_;
-	return $self->select_insert_string_id( $string, 'file_type', {string_column => 'suffix'} );
+	return $self->select_insert_string_id( $string, 'file_type', {string_column => 'suffix', allow_blank_string => 1} );
 
 }
 
