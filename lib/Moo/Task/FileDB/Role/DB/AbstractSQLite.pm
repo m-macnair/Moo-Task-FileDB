@@ -1,7 +1,7 @@
 # ABSTRACT : Do DB Things using SQLite + SQL Abstract - this is the *only* sqlite module in MTFDB atm, but it relies on Moo/GenericRole/DB/SQLite.pm which is not included here for reasons
 package Moo::Task::FileDB::Role::DB::AbstractSQLite;
-our $VERSION = 'v0.0.16';
-##~ DIGEST : 707bf786b5c9f624a5afe205372c2ef9
+our $VERSION = 'v0.0.17';
+##~ DIGEST : 798318b358f975647a5e98d0c8dae3f1
 use Moo::Role;
 
 #because I use confess everywhere
@@ -37,6 +37,36 @@ sub get_file_id {
 	} else {
 		return $row->{id};
 	}
+}
+
+sub get_hash_id_for_file_string {
+	my ( $self, $file_string, $p ) = @_;
+	my ( $file_id, $file_row ) = $self->get_file_id( $file_string );
+
+	if ( $file_row->{hash_id} && !$p->{force_hash} ) {
+		return $file_row->{hash_id};
+	}
+	$md5_string = $self->get_md5_hash_string_for_file_string( $file_string );
+
+	$self->insert(
+		'hash_string',
+		{
+			md5_string => $md5_string
+		}
+	);
+	my $hash_id = $self->last_id();
+
+	if ( wantarray() ) {
+		return (
+			$hash_id,
+			{
+				md5_string => $md5_string
+			}
+		);
+	} else {
+		return $hash_id;
+	}
+
 }
 
 sub get_file_type_id {
