@@ -1,7 +1,7 @@
 # ABSTRACT : Do DB Things using SQLite + SQL Abstract - this is the *only* sqlite module in MTFDB atm, but it relies on Moo/GenericRole/DB/SQLite.pm which is not included here for reasons
 package Moo::Task::FileDB::Role::DB::AbstractSQLite;
-our $VERSION = 'v0.0.15';
-##~ DIGEST : be6c3a8fc922db4aef7e6b892a8f75c5
+our $VERSION = 'v0.0.16';
+##~ DIGEST : 707bf786b5c9f624a5afe205372c2ef9
 use Moo::Role;
 
 #because I use confess everywhere
@@ -18,13 +18,18 @@ sub get_dir_id {
 sub get_file_id {
 	my ( $self, $string ) = @_;
 
-	#TODO get URI host indicator
+	#TODO get URI host indicator (?)
 	my ( $file, $dir ) = $self->file_path_parts( $string );
-	my $dir_id = $self->get_dir_id( $dir );
+	my ( undef, undef, $suffix ) = $self->file_parse( $string );
+
+	#TODO: actual validation of the file type
+	my $file_type_id = $self->get_file_type_id( lc( $suffix ) );
+	my $dir_id       = $self->get_dir_id( $dir );
 
 	my $p = {
-		name   => $file,
-		dir_id => $dir_id
+		name         => $file,
+		dir_id       => $dir_id,
+		file_type_id => $file_type_id
 	};
 	my $row = $self->select_insert_href( 'file', $p, [qw/* /] );
 	if ( wantarray() ) {
@@ -32,6 +37,11 @@ sub get_file_id {
 	} else {
 		return $row->{id};
 	}
+}
+
+sub get_file_type_id {
+	my ( $self, $string ) = @_;
+	return $self->select_insert_string_id( $string, 'file_type', {string_column => 'suffix'} );
 
 }
 

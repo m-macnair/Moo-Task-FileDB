@@ -21,8 +21,9 @@ CREATE INDEX file_size ON file(size);
 CREATE TABLE file_type (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	suffix TEXT NOT NULL UNIQUE,
-	mime_type TEXT NOT NULL
+	mime_type TEXT
 );
+CREATE INDEX file_type_suffix ON file_type(suffix);
 
 /* dir */
 CREATE TABLE dir (
