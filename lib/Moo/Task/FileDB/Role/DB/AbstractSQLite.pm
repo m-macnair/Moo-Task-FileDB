@@ -1,7 +1,7 @@
 # ABSTRACT : Do DB Things using SQLite + SQL Abstract - this is the *only* sqlite module in MTFDB atm, but it relies on Moo/GenericRole/DB/SQLite.pm which is not included here for reasons
 package Moo::Task::FileDB::Role::DB::AbstractSQLite;
-our $VERSION = 'v0.0.19';
-##~ DIGEST : 61a4836d4f5f998486becf8aea20c6e0
+our $VERSION = 'v0.0.20';
+##~ DIGEST : 0463ef628ade072a8af68b64e5f576db
 use Moo::Role;
 
 #because I use confess everywhere
@@ -87,7 +87,7 @@ sub get_file_path_from_id {
 	Carp::Confess( 'Dir row not found' ) unless $dir_row;
 	my $path = "$dir_row->{name}$file_row->{name}";
 
-	#not convinced this should be in this sub just yet
+	#not convinced this should be in this sub as there are more legitimate cases without than with so makes sense to let with's handle errors themself
 	#Carp::Confess("Path [$path] not found") unless $dir_row;
 	return $path;
 
