@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 # ABSTRACT:
-our $VERSION = 'v0.0.4';
+our $VERSION = 'v0.0.5';
 
-##~ DIGEST : 1c96eff789dba3801839cedc3c4a247f
+##~ DIGEST : 1fa8165bf52365bf78cb113fea164bb5
 
 use strict;
 use warnings;
@@ -14,7 +14,6 @@ with qw/
   Moo::GenericRole::DB
   Moo::GenericRole::DB::Abstract
   Moo::GenericRole::DB::SQLite
-  Moo::Task::FileDB::Role::DB::SQLite::Setup
   Moo::Task::FileDB::Role::DB::AbstractSQLite
   /;
 has config => (
