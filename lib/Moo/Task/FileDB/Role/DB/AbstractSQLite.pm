@@ -1,7 +1,7 @@
 # ABSTRACT : Do DB Things using SQLite + SQL Abstract - this is the *only* sqlite module in MTFDB atm, but it relies on Moo/GenericRole/DB/SQLite.pm which is not included here for reasons
 package Moo::Task::FileDB::Role::DB::AbstractSQLite;
-our $VERSION = 'v0.0.20';
-##~ DIGEST : 0463ef628ade072a8af68b64e5f576db
+our $VERSION = 'v0.0.21';
+##~ DIGEST : 957578daa7edb59543249bab72cbc7e6
 use Moo::Role;
 
 #because I use confess everywhere
@@ -80,15 +80,15 @@ sub get_file_type_id {
 
 sub get_file_path_from_id {
 	my ( $self, $id ) = @_;
-	Carp::Confess( 'ID not provided' ) unless $id;
+	Carp::confess( 'ID not provided' ) unless $id;
 	my $file_row = $self->select( 'file', [qw/*/], {id => $id} )->fetchrow_hashref();
-	Carp::Confess( 'File row not found' ) unless $file_row;
+	Carp::confess( 'File row not found' ) unless $file_row;
 	my $dir_row = $self->select( 'dir', [qw/*/], {id => $file_row->{dir_id}} )->fetchrow_hashref();
-	Carp::Confess( 'Dir row not found' ) unless $dir_row;
+	Carp::confess( 'Dir row not found' ) unless $dir_row;
 	my $path = "$dir_row->{name}$file_row->{name}";
 
 	#not convinced this should be in this sub as there are more legitimate cases without than with so makes sense to let with's handle errors themself
-	#Carp::Confess("Path [$path] not found") unless $dir_row;
+	#Carp::confess("Path [$path] not found") unless $dir_row;
 	return $path;
 
 }
