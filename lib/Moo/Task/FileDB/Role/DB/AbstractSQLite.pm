@@ -1,7 +1,7 @@
 # ABSTRACT : Do DB Things using SQLite + SQL Abstract - this is the *only* sqlite module in MTFDB atm, but it relies on Moo/GenericRole/DB/SQLite.pm which is not included here for reasons
 package Moo::Task::FileDB::Role::DB::AbstractSQLite;
-our $VERSION = 'v0.0.21';
-##~ DIGEST : 957578daa7edb59543249bab72cbc7e6
+our $VERSION = 'v1.1.1';
+##~ DIGEST : cf985d4a775282ebb5692665d168660a
 use Moo::Role;
 
 #because I use confess everywhere
@@ -16,6 +16,30 @@ sub get_dir_id {
 
 #TODO - handle
 sub get_file_id {
+	my ( $self, $string ) = @_;
+	my $p = $self->_get_file_id_shared( $string );
+
+	my $row = $self->select_insert_href( 'file', $p, [qw/* /] );
+	if ( wantarray() ) {
+		return ( $row->{id}, $row );
+	} else {
+		return $row->{id};
+	}
+}
+
+sub get_existing_file_id {
+	my ( $self, $string ) = @_;
+	my $p = $self->_get_file_id_shared( $string );
+
+	my $row = $self->select( 'file', [qw/* /], $p )->fetchrow_hashref();
+	if ( wantarray() ) {
+		return ( $row->{id}, $row );
+	} else {
+		return $row->{id};
+	}
+}
+
+sub _get_file_id_shared {
 	my ( $self, $string ) = @_;
 
 	#TODO get URI host indicator (?)
@@ -34,12 +58,7 @@ sub get_file_id {
 		dir_id       => $dir_id,
 		file_type_id => $file_type_id
 	};
-	my $row = $self->select_insert_href( 'file', $p, [qw/* /] );
-	if ( wantarray() ) {
-		return ( $row->{id}, $row );
-	} else {
-		return $row->{id};
-	}
+	return $p;
 }
 
 sub get_hash_id_for_file_string {
@@ -82,7 +101,7 @@ sub get_file_path_from_id {
 	my ( $self, $id ) = @_;
 	Carp::confess( 'ID not provided' ) unless $id;
 	my $file_row = $self->select( 'file', [qw/*/], {id => $id} )->fetchrow_hashref();
-	Carp::confess( 'File row not found' ) unless $file_row;
+	Carp::confess( "File row not found for [$id]" ) unless $file_row;
 	my $dir_row = $self->select( 'dir', [qw/*/], {id => $file_row->{dir_id}} )->fetchrow_hashref();
 	Carp::confess( 'Dir row not found' ) unless $dir_row;
 	my $path = "$dir_row->{name}$file_row->{name}";
